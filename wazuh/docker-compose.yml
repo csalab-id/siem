@@ -1,13 +1,14 @@
 version: '3.8'
 services:
-  wazuh_manager:
-    image: 'wazuh/wazuh-manager:4.3.11'
-    hostname: wazuh-manager.lab
+  wazuh-manager.lab:
+    image: 'wazuh/wazuh-manager:4.7.0'
+    hostname: mail.wazuh-manager.lab
     restart: always
     ports:
-      - 0.0.0.0:55000:55000
+      - 0.0.0.0:514:514/udp
       - 0.0.0.0:1514:1514
       - 0.0.0.0:1515:1515
+      - 0.0.0.0:55000:55000
     environment:
       - INDEXER_URL=https://wazuh-indexer.lab:9200
       - INDEXER_USERNAME=admin
@@ -39,7 +40,7 @@ services:
         ipv4_address: 10.40.0.10
 
   wazuh_indexer:
-    image: 'wazuh/wazuh-indexer:4.3.11'
+    image: 'wazuh/wazuh-indexer:4.7.0'
     hostname: wazuh-indexer.lab
     restart: always
     ports:
@@ -55,19 +56,19 @@ services:
         hard: 65536
     volumes:
       - wazuh-indexer-data:/var/lib/wazuh-indexer
-      - ./config/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-indexer/config/certs/root-ca.pem
-      - ./config/wazuh_indexer_ssl_certs/wazuh-indexer.lab-key.pem:/usr/share/wazuh-indexer/config/certs/wazuh-indexer.lab.key
-      - ./config/wazuh_indexer_ssl_certs/wazuh-indexer.lab.pem:/usr/share/wazuh-indexer/config/certs/wazuh-indexer.lab.pem
-      - ./config/wazuh_indexer_ssl_certs/admin.pem:/usr/share/wazuh-indexer/config/certs/admin.pem
-      - ./config/wazuh_indexer_ssl_certs/admin-key.pem:/usr/share/wazuh-indexer/config/certs/admin-key.pem
-      - ./config/wazuh_indexer/wazuh.indexer.yml:/usr/share/wazuh-indexer/config/opensearch.yml
-      - ./config/wazuh_indexer/internal_users.yml:/usr/share/wazuh-indexer/plugins/opensearch-security/securityconfig/internal_users.yml
+      - ./config/wazuh_indexer_ssl_certs/root-ca.pem:/usr/share/wazuh-indexer/certs/root-ca.pem
+      - ./config/wazuh_indexer_ssl_certs/wazuh-indexer.lab-key.pem:/usr/share/wazuh-indexer/certs/wazuh-indexer.lab.key
+      - ./config/wazuh_indexer_ssl_certs/wazuh-indexer.lab.pem:/usr/share/wazuh-indexer/certs/wazuh-indexer.lab.pem
+      - ./config/wazuh_indexer_ssl_certs/admin.pem:/usr/share/wazuh-indexer/certs/admin.pem
+      - ./config/wazuh_indexer_ssl_certs/admin-key.pem:/usr/share/wazuh-indexer/certs/admin-key.pem
+      - ./config/wazuh_indexer/wazuh.indexer.yml:/usr/share/wazuh-indexer/opensearch.yml
+      - ./config/wazuh_indexer/internal_users.yml:/usr/share/wazuh-indexer/opensearch-security/internal_users.yml
     networks:
       siem:
         ipv4_address: 10.40.0.20
 
   wazuh_dashboard:
-    image: 'wazuh/wazuh-dashboard:4.3.11'
+    image: 'wazuh/wazuh-dashboard:4.7.0'
     hostname: wazuh-dashboard.lab
     restart: always
     ports:
@@ -90,7 +91,6 @@ services:
 
   server.lab:
     hostname: mail.server.lab
-    container_name: server.lab
     image: 'csalab/iredmail:amd64'
     restart: always
     ports:
@@ -98,7 +98,7 @@ services:
     environment:
       - HOSTNAME=mail.server.lab
       - FIRST_MAIL_DOMAIN=server.lab
-      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=${MAIL_PASS:-supersecretpassword}
+      - FIRST_MAIL_DOMAIN_ADMIN_PASSWORD=${MAIL_PASS:-mailpassword}
       - MLMMJADMIN_API_TOKEN=CCmMymMpFH35K8Q0H3FQAsSRQzkSjCeazm+t1X27cdE=
       - ROUNDCUBE_DES_KEY=s9lVEEaiA+MmvYZvfi1k0WQNFiFmGOYI
     volumes:
