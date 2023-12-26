@@ -1,0 +1,35 @@
+version: '3.8'
+services:
+  splunk:
+    hostname: splunk.lab
+    image: 'splunk/splunk:9.1.2'
+    restart: always
+    ports:
+      - 0.0.0.0:8000:8000
+      - 0.0.0.0:8065:8065
+      - 0.0.0.0:8088:8088
+      - 0.0.0.0:8089:8089
+      - 0.0.0.0:8191:8191
+      - 0.0.0.0:9887:9887
+      - 0.0.0.0:9997:9997
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=${SPLUNK_PASS:-splunkpassword}
+    volumes:
+      - splunk_etc:/opt/splunk/etc
+      - splunk_var:/opt/splunk/var
+    networks:
+      siem:
+        ipv4_address: 10.50.0.10
+
+networks:
+  siem:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.50.0.0/24
+          gateway: 10.50.0.1
+
+volumes:
+  splunk_etc: {}
+  splunk_var: {}
