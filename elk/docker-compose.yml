@@ -52,16 +52,6 @@ services:
       siem:
         ipv4_address: 10.60.0.30
 
-  endpoint:
-    image: 'docker.elastic.co/elastic-security/elastic-sec-endpoint:8.11.3'
-    hostname: endpoint.lab
-    restart: always
-    depends_on:
-      - elasticsearch
-    networks:
-      siem:
-        ipv4_address: 10.60.0.40
-
 networks:
   siem:
     driver: bridge
