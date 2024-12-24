@@ -1,8 +1,7 @@
-version: '3.8'
 services:
   splunk:
     hostname: splunk.lab
-    image: 'splunk/splunk:9.1.2'
+    image: 'splunk/splunk:9.4.0'
     restart: always
     ports:
       - 0.0.0.0:8000:8000
