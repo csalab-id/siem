@@ -10,7 +10,7 @@ services:
         ipv4_address: 10.80.0.10
 
   datanode:
-    image: 'graylog/graylog-datanode:6.0'
+    image: 'graylog/graylog-datanode:6.1'
     hostname: datanode.lab
     environment:
       GRAYLOG_DATANODE_NODE_ID_FILE: "/var/lib/graylog-datanode/node-id"
@@ -37,7 +37,7 @@ services:
 
   graylog:
     hostname: graylog.lab
-    image: 'graylog/graylog:6.0'
+    image: 'graylog/graylog:6.1'
     depends_on:
       mongodb:
         condition: 'service_started'
